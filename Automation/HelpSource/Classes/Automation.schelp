@@ -1,0 +1,86 @@
+TITLE:: Automation
+summary:: Automation for sliders and knobs on the same window
+categories:: GUI
+
+DESCRIPTION::
+The Automation can be added to a link::Classes/Window:: as a link::Classes/Button::.
+
+Once a slider or a knob is focused, clicking on the Automation button will open a new window which contains automation settings.
+
+note::In current version, only link::Classes/Slider:: and link::Classes/Knob:: can be controlled.::
+note::Class EnvDraw is required.::
+
+SUBSECTION:: Interaction
+
+table::
+## Left click || Select
+## Left click and drag || Move a point
+## Right click || Post current point's time and value
+## Alt - Left click || Add a point
+## Alt - Reft click || Delete a point
+## Shift - Left click || Multiple selection
+## Shift - Right click between two points || Change the curve
+## Ctrl - Left click and drag || Copy the envelope to another EnvDraw
+::
+
+note::In an Apple keyboard, please use Option as Alt and Command as Ctrl.::
+
+SUBSECTION:: Mode
+
+table::
+## Off || The default mode. The automation will not be executed.
+## Play || The knob or the slider will be automatically controlled by the envelope.
+## Rec || The movement of knob and the slider will be recorded to the envelope.
+::
+
+SUBSECTION:: Triggering
+
+Use code::instanceName.play:: to trigger the automation on all the sliders and knobs. If the Play mode is selected, the sliders or knobs will start to be controlled by the envelope. If the Rec mode is selected, the envelope will be recording the equivalent GUI object movement.
+
+Use code::instanceName.stop:: to stop the GUI controlling or recording.
+
+Examples for triggering the automation can be found below.
+
+CLASSMETHODS::
+
+METHOD:: new
+
+ARGUMENT:: parent
+The parent view.
+
+ARGUMENT:: bounds
+An instance of link::Classes/Rect::, or a link::Classes/Point:: indicating code::width@height::.
+
+EXAMPLES::
+
+code::
+
+(
+Window.closeAll;
+w = Window.new(\Automation, Rect(100, 200, 230, 300));
+w.view.decorator_(FlowLayout(w.view.bounds, 10@10, 10@10));
+w.front;
+w.alwaysOnTop_(true);
+
+x = Slider(w, 210@30);
+Slider(w, 210@30); // the variable name for the instance is not required for Automation
+
+b = Slider2D(w,Rect(10,50,210,50)); // this GUI cannot be controled by Automation
+
+Knob(w, 100@100);
+Knob(w, 100@100);
+
+a = Automation(w, 100@30);
+
+Button(w, 100@30)
+.states_([
+	["a.play", Color.black, Color.grey],
+	["a.stop", Color.black, Color.green]
+])
+.action_({
+	arg item;
+	if (item.value == 1) {a.play} {a.stop};
+});
+)
+
+::

@@ -1,0 +1,43 @@
+TITLE:: MIDILearn
+summary:: A button GUI supporting MIDI learn
+categories:: GUI
+
+DESCRIPTION::
+MIDILearn is actually a Button GUI with special function.
+You can add it to almost all the GUI (Window or CompositeView) as a Button.
+When you click it and the button turns green, you can touch your slider or knob on your MIDI keyboard.
+It will automatically mapped to the currently focused slider of knob (only) and the button colour will be reset.
+
+note::Currently only the Knob and Slider GUI can be controlled by MIDILearn.::
+
+CLASSMETHODS::
+
+METHOD:: new
+
+ARGUMENT:: parent
+The parent view.
+
+ARGUMENT:: bounds
+An instance of link::Classes/Rect::, or a link::Classes/Point:: indicating code::width@height::.
+EXAMPLES::
+
+code::
+
+( //Click on the different views and hit keys on the keyboard.
+Window.closeAll;
+w = Window.new(\MIDILearn, Rect(100, 200, 220, 350));
+w.view.decorator_(FlowLayout(w.view.bounds, 10@10, 7@7))
+.alwaysOnTop_(true);
+w.front;
+
+~s0 = Slider(w, 200@30);
+~s1 = Slider(w, 200@30);
+Slider(w, 200@30); // the variable name for the instance is not required for MIDILearn
+Slider(w, 200@30);
+b = Slider2D(w,Rect(10,50,180,60)); // this cannot be controled by MIDI cc (currently)
+Knob(w, 50@50);
+Knob(w, 50@50);
+m = MIDILearn(w, 100@30); // click it and then move a knob or slider on your keyboard
+)
+
+::

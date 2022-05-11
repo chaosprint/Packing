@@ -1,0 +1,102 @@
+TITLE:: EnvDraw
+summary:: A drawable envelope view
+categories:: GUI
+related:: Classes/EnvelopeView, Classes/MultiSliderView, Classes/SCEnvelopeEdit
+
+DESCRIPTION::
+
+The EnvDraw is based on link::Classes/EnvelopeView::. Therefore, it should be used within a link::Classes/Window::.
+
+More detailed explanation can be found in the example section.
+
+SUBSECTION:: Interaction
+
+table::
+## Left click || Select
+## Left click and drag || Move a point
+## Right click || Post current point's time and value
+## Alt - Left click || Add a point
+## Alt - Reft click || Delete a point
+## Shift - Left click || Multiple selection
+## Shift - Right click between two points || Change the curve
+## Ctrl - Left click and drag || Copy the envelope to another EnvDraw
+::
+
+note::In an Apple keyboard, please use Option as Alt and Command as Ctrl.::
+
+CLASSMETHODS::
+
+METHOD:: new
+
+ARGUMENT:: parent
+The parent view.
+
+ARGUMENT:: bounds
+An instance of link::Classes/Rect::, or a link::Classes/Point:: indicating code::width@height::.
+
+EXAMPLES::
+
+code::
+
+(
+Window.closeAll;
+w = Window("Automation", Rect(400, 400, 640, 310))
+.acceptsMouseOver_(true)
+.front
+.alwaysOnTop_(true);
+w.view.decorator = FlowLayout(w.view.bounds, 10@10, 10@10);
+a = EnvDraw(w, 620@100)
+.curve_(\sin)
+.scale_(3)
+.mouseOverAction_({
+    i.string_("time:"++a.mousePos[0].asString);
+    j.string_("value:"++a.mousePos[1].asString);
+});
+
+i = StaticText(w, 90@30)
+.string_("time:")
+.font_(Font(\consolas, 12));
+
+j = StaticText(w, 90@30)
+.string_("value:")
+.font_(Font(\consolas, 12));
+
+b = EnvDraw(w, 620@100)
+.mouseOverAction_({
+    k.string_("time:"++b.mousePos[0].asString);
+    l.string_("value:"++b.mousePos[1].asString);
+});
+
+k = StaticText(w, 90@30)
+.string_("time:")
+.font_(Font(\consolas, 12));
+
+l = StaticText(w, 90@30)
+.string_("value:")
+.font_(Font(\consolas, 12));
+)
+
+// try each line to see these methods
+a.scale
+a.curve
+a.curve_(\sin)
+a.curve_(\lin)
+a.env;
+a.env.plot;
+a.value
+a.value_([[0,0],[0.1,1],[0.5,0.5],[1,1]]);
+a.valueScale
+a.valueScale_([[0,0],[1,1],[2,0.6],[4,1]]);
+{SinOsc.ar(440!2, 0, 0.3)*EnvGen.kr(a.env)}.play;
+a.action_({a.value.postln;})
+
+b.scale_(10)
+b.curve
+b.curve_(\sin)
+b.curve_(\lin)
+b.env;
+b.env.plot;
+b.value;
+{SinOsc.ar(EnvGen.kr(b.env)*200+440!2, 0, 0.3)*0.3}.play;
+
+::

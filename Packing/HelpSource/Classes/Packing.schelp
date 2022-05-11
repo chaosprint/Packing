@@ -1,0 +1,124 @@
+TITLE:: Packing
+summary:: A GUI instrument for sample playback sound design
+categories:: GUI
+
+DESCRIPTION::
+Packing is an instrument built for sound design or live performance. It takes a sample and then plays it randomly within a pitch range controlled by the user in real-time. The gap between every two samples is controlled by the parameter packing. The user can also change the sample playback position, fade-in and fade-out.
+
+SUBSECTION::Load Soundfiles
+
+Clicking on the "Load Soundfiles" button will open a dialogue window. Users can load one or several sound files into the list.
+Selecting different sound in the list will change the buffer used by the pattern on the fly.
+
+SUBSECTION::Controls
+
+All the one-dimension sliders can be controlled by MIDILearn or Automation.
+
+note::The Class Automation and MIDILearn is required.::
+
+SUBSECTION::The 2D Slider
+
+As is shown on the top left corner, the 2D slider is controlling the pitch range in MIDI number. The original sample pitch is regarded as MIDI number 60. Therefore, 72 means an octave higher. Range 60-72 means the sample will be played randomly within an octave.
+
+The X axis is controlling the centre of the range and the Y axis is controlling how large the range is. Although the link::Classes/Slider2D:: and the link::Classes/RangeSlider:: cannot be controlled by MIDILearn, the link::Classes/Slider:: linked to them on the bottom and right side can be controlled by MIDILearn or Automation.
+
+SUBSECTION::A Typical Procedure
+
+1. Load sound files.
+
+2. Map the "Packing" parameters to MIDI cc.
+
+3. click "play" button and use mouse to control the 2D slider.
+
+SUBSECTION::Start and End Position
+Users can set the start and end position of the sample. Also, users can set an ASR envelop by changing the fade-in and fade-out parameters. The curve is always code::\sine::. Therefore, this instrument can perform as a granular synthesiser with right settings.
+
+CLASSMETHODS::
+
+METHOD:: new
+
+ARGUMENT:: numOutChannels
+number of channels that the packing output will be. The default is 2.
+
+ARGUMENT:: wrap
+sets a maximum duration for each packed sound to save CPU usage.
+For each packed sound lasting longer than the wrap time, it will sustain for (wrap - release) second and be released.
+
+ARGUMENT:: release
+sets the release time as part of the wrap to avoid clicks.
+
+ARGUMENT:: lowCut
+sets the frequency cut by a high pass filter.
+
+ARGUMENT:: ramp
+the time each sample synth react to the auto volume control. For example, when the packing is small and the synth duration is long, there might be hundreds of synth playing at the same time. Thus, the volume need to be turned down. A too small ramp might cause a very unnatural volume change.
+
+ARGUMENT:: countDown
+sets the recording countDown
+
+ARGUMENT:: bus
+sets the output bus. The default is 0. code::\fx:: will call the build-in FreeVerb. You can use your own link::Classes/Bus::.
+
+ARGUMENT:: mix
+dry/wet balance. range 0..1.
+
+ARGUMENT:: room
+room size. rage 0..1.
+
+ARGUMENT:: damp
+Reverb HF damp. range 0..1.
+
+
+EXAMPLES::
+
+code::
+
+// the default output is stereo
+n = Packing();
+
+// if you have multichannel playback systems, try it;
+n = Packing(8);
+
+// you can use your own effect
+(
+~fx = Bus.audio(s, 8);
+Packing(8, bus: ~fx);
+
+SynthDef(\filter, {
+	arg inBus, outBus=0, freq=30;
+	var sig;
+	sig = In.ar(inBus, 8);
+	sig = LPF.ar(sig, freq);
+	Out.ar(outBus, sig);
+}).load;
+
+// this SynthWin class is needed, or you can use Synth()
+SynthWin(\filter)
+.isBufLoadNeeded_(false)
+.ctrl_([
+	[\freq, \linexp, 10, 800, 30]
+])
+.args_([\inBus, ~fx])
+.front;
+)
+
+// this should go surrounding the speakers
+{PanAz.ar(8, PinkNoise.ar*0.1,  Phasor.kr(0, 10/SampleRate.ir, -1, 1, 0))}.play;
+
+// check these
+thisProcess.platform.recordingsDir
+s.recChannels
+
+// some useful code to include in startup file:
+o = Server.local.options;
+o.numOutputBusChannels_(8);
+o.device_("YOUR OWN SOUNDCARD");
+
+// better work with these two windows
+(
+s.makeWindow;
+s.meter;
+s.plotTree;
+)
+
+::
