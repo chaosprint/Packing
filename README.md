@@ -6,7 +6,7 @@ Packing is an interactive sound synthesis interface in SuperCollider.
 
 When I studies Sonic Arts in University of Sheffield, I used Trevor Wishart's CDP a lot.
 
-The neutral is one of my favourite tools inside CDP.
+`Neutral` is one of my favourite tools inside CDP.
 
 However, limited by the time it is developed, it only works in non-real-time, so I rewrote it SuperCollider.
 
@@ -14,7 +14,7 @@ To give real-time interactive capability to the instrument actually brings surpr
 
 I have used it in the performance at the OsloWorld Music Festival 2019.
 
-Still, the non-real-time synthesis is there, and the experienced is enhanced with the SuperCollier tool `EnvDraw` I wrote as a bonus in this repo.
+Still, the non-real-time synthesis is there, and the experience is enhanced with the SuperCollier automation tool `EnvDraw` I wrote as a bonus in this repo.
 
 ## Usage
 
