@@ -4,9 +4,9 @@ Packing is an interactive sound synthesis interface in SuperCollider.
 
 ## Motivation
 
-When I studies Sonic Arts in University of Sheffield, I used Trevor Wishart's CDP a lot.
+When I studied MA Sonic Arts at the University of Sheffield, I used Trevor Wishart's CDP a lot.
 
-`Neutral` is one of my favourite tools inside CDP.
+`Neutral` is one of my favourite tools in CDP.
 
 However, limited by the time it is developed, it only works in non-real-time, so I rewrote it SuperCollider.
 
